@@ -104,3 +104,142 @@ void pressAnyKey() {
     getch();
     system("cls");
 }
+typedef struct Date{
+	int day;
+	int month;
+	int year;
+} date;
+typedef struct Room{
+	int id;
+	char name[50];
+	char address[50];
+	char type[20]; //Single Room, Twin Room, Double Room, Triple Room, Quad Room
+	int price;
+	char contact[20]; //email / hotline
+	char state[20];
+	date start; //ngay bat dau cho thue
+	date end; //ngay ket thuc thoi gian thue
+}room; 
+//Ham ve mot duong thang
+void drawLine(int n){
+	printf ("\n");
+	for (int i=0;i<n;i++) printf ("_");
+	printf ("\n");
+}
+//Ham tim ID lon nhat
+int IDMAX (room a[], int n) {
+    int idMax = 0;
+    if (n > 0) {
+        idMax = a[0].id;
+        for(int i = 0;i < n; i++) {
+            if (a[i].id > idMax) {
+                idMax = a[i].id;
+            }
+        }
+    }
+    return idMax;
+}
+//Ham in danh sach phong ra man hinh
+void showRoom(room a[], int n) {
+    drawLine(100);
+    printf ("%-5s%-5s%-16s%-15s%-15s%-16s%-20s%-20s%-15s%-15s","STT","ID","Ten Khach san","Dia chi","Loai Phong","Gia phong/dem","Lien he dat phong","Trang thai phong","Ngay bat dau","Ngay ket thuc");
+    for(int i = 0; i < n; i++) {
+        // in phong thu i ra man hinh
+        printf ("\n");
+        printf("%-5d", i + 1);
+        printf("%-5d", a[i].id);
+        printf("%-16s", a[i].name);
+        printf("%-15s", a[i].address);
+        printf("%-15s", a[i].type);
+        printf("%-16d", a[i].price);
+    	printf("%-20s", a[i].contact);
+    	printf("%-20s", a[i].state);
+        printf("%d/%d/%-12d", a[i].start.day, a[i].start.month, a[i].start.year);
+		printf("%d/%d/%d", a[i].end.day, a[i].end.month, a[i].end.year);
+    }
+    drawLine(100);
+}
+void roomType(){
+	printf ("\n( 1-Single Room \t2-Twin Room \t3-Double Room \t4-Triple Room \t5-Quad Room )\n");
+}
+//Ham nhap thong tin phong
+void roomInforInput(room &newRoom,int id){
+	newRoom.id=id;
+	printf ("Nhap ten Khach san : ");  fflush(stdin); gets (newRoom.name);
+	printf ("Nhap dia chi phong : "); gets(newRoom.address);roomType();
+	printf ("Nhap loai phong : ");fflush(stdin); gets(newRoom.type); 
+	printf ("Nhap gia cho phong / dem (nghin VND): "); scanf ("%d",&newRoom.price);
+	printf ("Nhap email/sdt : "); fflush(stdin);gets(newRoom.contact);
+	strcpy(newRoom.state,"Chua dat");
+	newRoom.start.day = 0; newRoom.start.month = 0; newRoom.start.year = 0;
+	newRoom.end.day=0; newRoom.end.month=0; newRoom.end.year=0;
+}
+//Ham nhap phong
+void inputRoom(room a[], int id, int n) {
+    drawLine(60);
+    printf("\n Nhap phong: \n");
+    roomInforInput(a[n], id);
+    drawLine(60);
+}
+//Ham xoa phong
+int deleteRoom(room a[], int id, int n){
+	int found = 0;
+    for(int i = 0; i < n; i++) {
+        if (a[i].id == id) {
+            found = 1;
+            drawLine(60);
+            for (int j = i; j < n; j++) {
+                a[j] = a[j+1];
+            }
+            printf ("\n Da xoa phong co ID = %d",id);
+            drawLine(60);
+            break;
+        }
+    }
+    if (found == 0) {
+        printf("\n Phong co ID = %d khong ton tai.", id);
+        return 0;
+    } else {
+        return 1;
+    }
+}
+//Ham kiem tra xem thang nhap vao co bao nhieu ngay, tra ve so ngay
+int checkDay(room bookRoom,int month){
+	int temp;
+	if (bookRoom.start.month==1 || bookRoom.start.month==3 || bookRoom.start.month==5 ||bookRoom.start.month==7 ||bookRoom.start.month==8 || bookRoom.start.month==10 ||bookRoom.start.month==12)
+	{
+		temp=31;
+	}
+	else if (bookRoom.start.month==2){
+		if (bookRoom.start.year % 4 ==0) temp = 29;
+		else temp=28; 
+	}
+	else temp =30;
+	return temp;
+}
+//Ham cap nhat phong (Dung trong chuc nang Dat phong) 
+void updateRoom(room &newRoom) {
+	//tinh so ngay trong thang
+	int temp;
+	strcpy(newRoom.state,"Da dat");
+	do {
+	printf ("Nhap ngay bat dau thue (dd/mm/yy) : \n"); 
+	scanf("%d%d%d",&newRoom.start.day,&newRoom.start.month,&newRoom.start.year);
+	temp=checkDay(newRoom,newRoom.start.month);
+	if ( newRoom.start.day<1||newRoom.start.day>temp || newRoom.start.month<1|| newRoom.start.month >12 || newRoom.start.year<23|| newRoom.start.year >99) printf ("\nLoi! Hay nhap ngay co that! \n");}
+	while (newRoom.start.day<1||newRoom.start.day>temp || newRoom.start.month<1|| newRoom.start.month >12 || newRoom.start.year<23|| newRoom.start.year >99);
+
+	do{
+		printf ("Nhap ngay ket thuc (dd/mm/yy) : \n"); 
+		scanf("%d%d%d",&newRoom.end.day,&newRoom.end.month,&newRoom.end.year);
+		temp=checkDay(newRoom,newRoom.end.month);
+		if ( newRoom.end.month<1 || newRoom.end.month>12 || newRoom.end.day<1 || newRoom.end.day>temp || newRoom.end.year <newRoom.start.year || newRoom.end.year>99) printf ("\nLoi! Hay nhap ngay co that! \n");
+	} while (newRoom.end.month<1 || newRoom.end.month>12 || newRoom.end.day<1 || newRoom.end.day>temp || newRoom.end.year <newRoom.start.year || newRoom.end.year>99);
+}
+//Ham reset lai trang thai phong, ngay thang dat phong.
+void resetRoom(room &newRoom){
+	strcpy(newRoom.state,"Chua dat");
+	newRoom.start.day = 0; newRoom.start.month = 0; newRoom.start.year = 0;
+	newRoom.end.day=0; newRoom.end.month=0; newRoom.end.year=0;
+}
+
