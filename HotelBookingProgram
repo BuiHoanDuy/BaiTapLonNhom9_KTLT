@@ -348,4 +348,260 @@ void notBookingHistory(room a[], int n) {
     printf ("\n\tDanh sach cac phong chua da dat :\n");
     showRoom(arrayFound, found);
 }
+void menu(){
+	char fileName[] = "HotelRoomList.bin";
+    room arrayRoom[MAX];
+    int roomTotal;
+    int idCount = 0;
+    int role;
+    readFile(arrayRoom,fileName,roomTotal);
+    idCount = IDMAX (arrayRoom, roomTotal);
+    struct user *head = NULL; 
+    int mainChoice;
+    Mall:
+    do {
+        printf("\n1. Dang ky\n");
+        printf("2. Dang nhap\n");
+        printf("3. Thoat\n");
+        printf("Nhap lua chon: ");
+        scanf("%d", &mainChoice);
 
+        switch(mainChoice) {
+            case 1:
+                regi(&head);
+                break;
+            case 2:
+				login(head,role);
+            	if (role==1) goto adminApp;
+                else if (role ==2) goto normalUser;
+                else break;
+               
+            case 3:
+                printf("Ban da thoat ung dung!\n");
+                break;
+            default:
+                printf("Khong co chuc nang nay. Vui long chon lai.\n");
+        }
+    } while(mainChoice != 3);
+	adminApp: 
+	int choice; 
+	do { 
+        printf ("               QUAN LY UNG DUNG - ADMIN \n");
+        printf ("*************************MENU**************************\n");
+        printf ("**  1. Dang phong                                    **\n");
+        printf ("**  2. Xoa phong                                     **\n");
+        printf ("**  3. Xem danh sach phong hien co                   **\n");
+        printf ("**  4. Tim phong theo ten Khach San                  **\n");
+        printf ("**  5. Tim phong theo dia chi muon den               **\n");
+        printf ("**  6. Xem cac phong da duoc dat                     **\n");
+        printf ("**  7. Xem cac phong con trong                       **\n");
+        printf ("**  8. Dang xuat                                     **\n");
+        printf ("**  0. Thoat ung dung                                **\n");
+        printf ("*******************************************************\n");
+        printf ("Nhap tuy chon: ");
+        scanf ("%d",&choice);
+        system("cls");
+        switch(choice){
+            case 1:
+                printf ("\n1.Dang phong.");
+                idCount++;
+                inputRoom(arrayRoom, idCount, roomTotal);
+                printf("\nThem phong thanh cong!");roomTotal++;
+                appendFile(arrayRoom, roomTotal, fileName);
+                pressAnyKey();
+                break;
+            case 2:
+                if(roomTotal > 0) {
+                    int id;
+                    printf ("\n2. Xoa phong.");
+                    printf ("\n Nhap ID phong muon xoa: "); scanf ("%d",&id);
+                    if (deleteRoom(arrayRoom, id, roomTotal) == 1) {
+                        printf("\nPhong nay da bi xoa da bi xoa.");
+                        roomTotal--;
+                    }
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                appendFile(arrayRoom, roomTotal, fileName);
+                pressAnyKey();
+                break;
+            case 3:
+                if(roomTotal > 0){
+                    printf ("\n3.Danh sach cac phong dang co tren ung dung.");
+                    showRoom(arrayRoom, roomTotal);
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 4:
+               if(roomTotal > 0) {
+                    printf ("\n4. Tim phong theo ten Khach San.");
+                    char strTen[30];
+                    printf ("\nNhap ten Khach San ban muon tim: ");fflush(stdin); gets(strTen);
+                    nameFind(arrayRoom, strTen, roomTotal);
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 5:
+               if(roomTotal > 0) {
+                    printf ("\n5. Tim phong theo dia chi muon den.");
+                    char strTen[30];
+                    printf ("\nNhap dia chi ban muon den: "); fflush(stdin); gets(strTen);
+                    desFind(arrayRoom, strTen, roomTotal);
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 6:
+                if(roomTotal > 0){
+                printf ("\n6.Xem cac phong da duoc dat :\n");
+                bookingHistory(arrayRoom, roomTotal);
+            }else{
+                printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 7:
+            	if(roomTotal > 0){
+                printf ("\n7.Xem cac phong con trong :\n");
+                notBookingHistory(arrayRoom, roomTotal);
+            }else{
+                printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 8:
+            	printf ("BAN DA DANG XUAT!");
+            	sleep(1);
+            	system("cls");
+            	goto Mall;
+            	break;
+            case 0:
+                printf ("\nBan da chon Thoat ung dung !");
+                getch();
+                goto exit;
+            default:
+                printf ("\nKhong co chuc nang nay!");
+                printf ("\nHay chon chuc nang trong hop menu.");
+                pressAnyKey();
+                break;
+        }
+        }
+        while (choice !=0);
+        
+	normalUser:
+	do { 
+        printf ("                 TIM PHONG KHACH SAN \n");
+        printf ("*************************MENU**************************\n");
+        printf ("**  1. Danh sach cac phong dang co tren ung dung     **\n");
+        printf ("**  2. Tim phong theo ten Khach San                  **\n");
+        printf ("**  3. Tim phong theo dia chi muon den               **\n");
+        printf ("**  4. Dat phong                                     **\n");
+        printf ("**  5. Huy dat phong                                 **\n");
+        printf ("**  6. Xem lich su dat phong                         **\n");
+        printf ("**  7. Dang xuat                                     **\n");
+        printf ("**  0. Thoat ung dung                                **\n");
+        printf ("*******************************************************\n");
+        printf ("Nhap tuy chon: ");
+        scanf ("%d",&choice);
+        switch(choice){
+            case 1:
+                if(roomTotal > 0){
+                    printf ("\n1.Danh sach cac phong dang co tren ung dung.");
+                    showRoom(arrayRoom, roomTotal);
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 2:
+                if(roomTotal > 0) {
+                    printf ("\n2. Tim phong theo ten Khach San.");
+                    char strTen[30];
+                    printf ("\nNhap ten Khach San ban muon tim: ");fflush(stdin); gets(strTen);
+                    nameFind(arrayRoom, strTen, roomTotal);
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 3:
+                if(roomTotal > 0) {
+                    printf ("\n3. Tim phong theo dia chi muon den.");
+                    char strTen[30];
+                    printf ("\nNhap dia chi ban muon den: "); fflush(stdin); gets(strTen);
+                    desFind(arrayRoom, strTen, roomTotal);
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 4:
+                if(roomTotal > 0) {
+                    int id;
+                    printf ("\n4. Dat phong.");
+                    printf ("\n Nhap ID phong ban muon dat: "); scanf ("%d",&id);
+                    booking(arrayRoom, id, roomTotal);
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                appendFile(arrayRoom, roomTotal, fileName);
+                pressAnyKey();
+                break;
+            
+            case 5:
+                if(roomTotal > 0) {
+                    int id;
+                    printf ("\n5. Huy dat phong.");
+                    printf ("\n Nhap ID phong ban muon huy: "); scanf ("%d",&id);
+                    unBooking(arrayRoom, id, roomTotal);
+                }else{
+                    printf ("\nDanh sach phong trong!");
+                }
+                appendFile(arrayRoom, roomTotal, fileName);
+                pressAnyKey();
+                break;
+            
+            case 6:
+            	if(roomTotal > 0){
+                printf ("\n6.Xem lich su dat phong :\n");
+                bookingHistory(arrayRoom, roomTotal);
+            }else{
+                printf ("\nDanh sach phong trong!");
+                }
+                pressAnyKey();
+                break;
+            case 7:
+            	printf ("BAN DA DANG XUAT!");
+            	sleep(1);
+            	system("cls");
+            	goto Mall;
+            case 0:
+                printf ("\nBan da chon Thoat ung dung!");
+                getch();
+                goto exit;
+            default:
+                printf ("\nKhong co chuc nang nay!");
+                printf ("\nHay chon chuc nang trong hop menu.");
+                pressAnyKey();
+                exit:
+                break;
+        }
+        }
+        while (choice != 0);
+    //Giai phong bo nho .
+	struct user *temp = head;
+    while(temp != NULL) {
+    struct user *current = temp;
+    temp = temp->next;
+    free(current);
+    }
+	appendFile(arrayRoom, roomTotal, fileName);
+}
+int main(){
+    menu();
+}
