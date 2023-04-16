@@ -79,31 +79,6 @@ void login(struct user *head, int &role) {
     return;
 }
 
-void readFile(room a[], char fileName[], int &n){
-	FILE * fp;
-    fp = fopen (fileName, "rb");
-    fread(&n, sizeof(n), 1, fp);
-	for(int i=0; i<n; i++){
-		fread(&a[i], sizeof(room), 1, fp);
-		}
-    fclose (fp);
-}
-//Ham luu du lieu vao file
-void appendFile(room a[], int n, char fileName[]) {
-    FILE * fp;
-    fp = fopen (fileName,"wb");
-    fwrite(&n, sizeof(n), 1, fp);
-	for(int i=0; i<n; i++){
-		fwrite(&a[i], sizeof(room), 1, fp);
-	}
-	fprintf(fp, "\n");
-    fclose (fp);
-}
-void pressAnyKey() {
-    printf ("\n\nBam phim bat ky de tiep tuc...");
-    getch();
-    system("cls");
-}
 typedef struct Date{
 	int day;
 	int month;
@@ -336,6 +311,7 @@ void bookingHistory(room a[], int n) {
     printf ("\n\tDanh sach cac phong da dat :\n");
     showRoom(arrayFound, found);
 }
+//Ham huy dat phong
 void notBookingHistory(room a[], int n) {
     room arrayFound[MAX];
     int found = 0;
@@ -347,6 +323,32 @@ void notBookingHistory(room a[], int n) {
     }
     printf ("\n\tDanh sach cac phong chua da dat :\n");
     showRoom(arrayFound, found);
+}
+//Ham doc file
+void readFile(room a[], char fileName[], int &n){
+	FILE * fp;
+    fp = fopen (fileName, "rb");
+    fread(&n, sizeof(n), 1, fp);
+	for(int i=0; i<n; i++){
+		fread(&a[i], sizeof(room), 1, fp);
+		}
+    fclose (fp);
+}
+//Ham luu du lieu vao file
+void appendFile(room a[], int n, char fileName[]) {
+    FILE * fp;
+    fp = fopen (fileName,"wb");
+    fwrite(&n, sizeof(n), 1, fp);
+	for(int i=0; i<n; i++){
+		fwrite(&a[i], sizeof(room), 1, fp);
+	}
+	fprintf(fp, "\n");
+    fclose (fp);
+}
+void pressAnyKey() {
+    printf ("\n\nBam phim bat ky de tiep tuc...");
+    getch();
+    system("cls");
 }
 void menu(){
 	char fileName[] = "HotelRoomList.bin";
