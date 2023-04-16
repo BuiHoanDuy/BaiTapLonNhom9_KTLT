@@ -243,3 +243,109 @@ void resetRoom(room &newRoom){
 	newRoom.end.day=0; newRoom.end.month=0; newRoom.end.year=0;
 }
 
+void booking(room a[], int id, int n) {
+    int found = 0;
+    for(int i = 0; i < n; i++) {
+        if (a[i].id == id) {
+            found = 1;
+            drawLine(60);
+            printf ("\n Ban muon dat phong co ID = %d",id);
+            updateRoom(a[i]);
+            printf ("\nBan da dat phong thanh cong!");
+            printf ("\nVao lich su dat phong de xem chi tiet!");
+            drawLine(60);
+            break;
+        }
+    }
+    if (found == 0) {
+        printf("\n Phong co ID = %d khong ton tai.", id);
+    }
+}
+//Ham huy dat phong.
+void unBooking(room a[],int id,int n){
+	int found = 0;
+    for(int i = 0; i < n; i++) {
+        if (a[i].id == id) {
+            found = 1;
+            drawLine(60);
+            printf ("\n Ban muon huy dat phong co ID = %d",id);
+            //dua ham Reset vao.
+            resetRoom(a[i]);
+            printf ("\nBan da huy dat phong thanh cong!");
+            drawLine(60);
+            break;
+        }
+    }
+    if (found == 0) {
+        printf("\n Phong co ID = %d chua duoc dat. Ban hay xem lai ID phong!", id);
+    }
+}
+//Ham tim phong theo ten
+void nameFind(room a[], char ten[], int n) {
+    room arrayFound[MAX];
+    char tenPhong[30];
+    int found = 0;
+    for(int i = 0; i < n; i++) {
+        strcpy(tenPhong, a[i].name);
+        if(strstr(strupr(tenPhong), strupr(ten))) {
+            arrayFound[found] = a[i];
+            found++;
+        }
+    }
+    showRoom(arrayFound, found);
+}
+
+//Ham tim phong theo dia chi 
+void desFind(room a[], char ten[], int n) {
+    room arrayFound[MAX];
+    char tenPhong[30];
+    int found = 0;
+    for(int i = 0; i < n; i++) {
+        strcpy(tenPhong, a[i].address);
+        if(strstr(strupr(tenPhong), strupr(ten))) {
+            arrayFound[found] = a[i];
+            found++;
+        }
+    }
+    showRoom(arrayFound, found);
+}
+//Hien thi so tien phai tra khi khach dat phong
+void showPrice(room bookRoom){	
+	int dayCount,daySum;
+	daySum=bookRoom.end.day - bookRoom.start.day;
+	while (bookRoom.end.month != bookRoom.start.month){
+		dayCount = checkDay( bookRoom,bookRoom.start.month );
+		daySum += dayCount;
+		bookRoom.start.month ++;
+	}
+	//Tinh tien
+	printf ("\nTong so tien can tra cho %d ngay thue cua phong co ID %d la: %d 000 VND\n",daySum,bookRoom.id,daySum*bookRoom.price); 
+	printf ("Chuyen tien vao STK 049494949 MB Bank trong vong 12h ke tu khi dat phong!\n");
+}
+//Lich su dat phong
+void bookingHistory(room a[], int n) {
+    room arrayFound[MAX];
+    int found = 0;
+    for(int i = 0; i < n; i++) {
+        if(strstr(a[i].state, "Da dat")) {
+           showPrice(a[i]); 
+		   arrayFound[found] = a[i];
+            found++; 	
+        }
+    }
+    printf ("\n\tDanh sach cac phong da dat :\n");
+    showRoom(arrayFound, found);
+}
+void notBookingHistory(room a[], int n) {
+    room arrayFound[MAX];
+    int found = 0;
+    for(int i = 0; i < n; i++) {
+        if(strstr(a[i].state, "Chua dat")) {
+            arrayFound[found] = a[i];
+            found++;
+        }
+    }
+    printf ("\n\tDanh sach cac phong chua da dat :\n");
+    showRoom(arrayFound, found);
+}
+
