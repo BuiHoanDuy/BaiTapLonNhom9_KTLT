@@ -1,0 +1,106 @@
+#include<stdio.h>
+#include <conio.h>
+#include <string.h>
+#include <stdlib.h>
+#define MAX 100
+#include <unistd.h>
+struct user {
+    char username[20];
+    char password[20];
+    struct user *next;
+};
+// Ham dang ki tai khoan
+void regi(struct user **head) {
+    struct user *newUser = (struct user*)malloc(sizeof(struct user));
+    printf("Nhap ten tai khoan: ");
+    scanf("%s", newUser->username);
+    printf("Nhap mat khau: ");
+    scanf("%s", newUser->password);
+    newUser->next = NULL;
+    struct user *temp = *head;
+    while(temp != NULL) {
+        if(strcmp(newUser->username, temp->username) == 0) {
+            printf("Tai khoan da ton tai. Vui long su dung ten dang nhap khac!\n");
+            free(newUser);
+            return;
+        }
+        temp = temp->next;
+    }
+   if(*head == NULL) {
+        *head = newUser;
+        printf("Dang ki thanh cong!\n");
+    } else {
+        temp = *head;
+        while(temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newUser;
+        printf("Dang ki thanh cong!\n");
+    }
+}
+//ham dang nhap
+void login(struct user *head, int &role) {
+
+    char username[20];
+    char password[20];
+    int count = 0;
+	//chay sai qua 3 lan thi se cho thuc hien lai viec chon Dang ky hoac Dang nhap
+    while(count < 3) {
+        printf("Nhap ten tai khoan: ");
+        scanf("%s", username);
+        printf("Nhap mat khau: ");
+        scanf("%s", password); 
+		struct user *temp = head;
+		//Tai khoan Admin la: ten dang nhap: admin; mk:admin
+		//Tai khoan nguoi dung can phai dang ky, tai khoan admin khong can dang ki
+        if(strcmp(username, "admin") == 0 && strcmp(password,"admin") == 0) {
+		role = 1; 
+        return;
+    	}
+    	else { 
+        while(temp != NULL) {
+            if(strcmp(username, temp->username) == 0 && strcmp(password, temp->password) == 0) {
+            	system("cls"); 
+                printf("DANG NHAP THANH CONG!\n");
+                sleep(1); 
+                printf ("Chuc ban su dung dich vu vui ve!\n");
+                sleep(1);
+                system("cls");
+                role =2; return;
+            }
+            temp = temp->next;
+    }
+        printf("Tai khoan khong ton tai. Vui long thu lai!\n");
+        count++;
+    }
+}
+    printf("Sai qua nhieu lan. Hay thao tac lai!\n");
+    role =3;
+    return;
+}
+
+void readFile(room a[], char fileName[], int &n){
+	FILE * fp;
+    fp = fopen (fileName, "rb");
+    fread(&n, sizeof(n), 1, fp);
+	for(int i=0; i<n; i++){
+		fread(&a[i], sizeof(room), 1, fp);
+		}
+    fclose (fp);
+}
+//Ham luu du lieu vao file
+void appendFile(room a[], int n, char fileName[]) {
+    FILE * fp;
+    fp = fopen (fileName,"wb");
+    fwrite(&n, sizeof(n), 1, fp);
+	for(int i=0; i<n; i++){
+		fwrite(&a[i], sizeof(room), 1, fp);
+	}
+	fprintf(fp, "\n");
+    fclose (fp);
+}
+void pressAnyKey() {
+    printf ("\n\nBam phim bat ky de tiep tuc...");
+    getch();
+    system("cls");
+}
